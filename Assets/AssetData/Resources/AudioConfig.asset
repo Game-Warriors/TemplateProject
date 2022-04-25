@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8559c9ad37ba963478b9e3feabc86b05, type: 3}
+  m_Name: AudioConfig
+  m_EditorClassIdentifier: 
+  _baseSfxVolume: 0.5
+  _baseLoopVolume: 1
+  _disableVolume: -80
+  _fadeSpeed: 6
+  _clipItems: []
+  _audioMixer: {fileID: 24100000, guid: d3f1ad6cb7377604cafca924b48f4ca7, type: 2}
+  _loopSourceSample: {fileID: 82824474988333176, guid: d928f5ec7f18a574890bac4530e0cf62, type: 3}
+  _sfxSourceCount: 4
+  _sfxSourceSample: {fileID: 82628557616741344, guid: 70611957a7b67bf42982073ca1f0f0c6, type: 3}
