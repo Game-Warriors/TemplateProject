@@ -60,8 +60,8 @@ namespace Managements.Core
         [UnityEngine.Scripting.Preserve]
         public GameConfiguration()
         {            
-            _key = new byte[] { 4, 5, 3, 18, 65, 10, 15, 55, 63, 12, 25, 94, 116, 83, 17, 57, 50, 36, 45, 75, 14, 28, 13, 119 };
-            _iv = Encoding.ASCII.GetBytes(SystemInfo.deviceUniqueIdentifier.Substring(0, 16));
+            _key = Encoding.ASCII.GetBytes("123456789123456789123456");
+            _iv = Encoding.ASCII.GetBytes("1234567891234567");
         }
 
 
@@ -79,7 +79,7 @@ namespace Managements.Core
 #if DEVELOPMENT || UNITY_EDITOR
                     return "ca-app-pub-3940256099942544/5224354917";
 #else
-                    return "ca-app-pub-1155937478045283/5108600685";
+                    return "ca-app-pub-3940256099942544/5224354917";
 #endif
                 }
                 else if (unitType == EUnitAdType.BannerId)
@@ -95,7 +95,7 @@ namespace Managements.Core
 #if DEVELOPMENT || UNITY_EDITOR
                     return "ca-app-pub-3940256099942544/1033173712";
 #else
-                    return "ca-app-pub-1155937478045283/3798592283";
+                    return "ca-app-pub-3940256099942544/1033173712";
 #endif
                 }
                 else if (unitType == EUnitAdType.NativeBannerId)
@@ -103,7 +103,7 @@ namespace Managements.Core
 #if DEVELOPMENT || UNITY_EDITOR
                     return "ca-app-pub-3940256099942544/2247696110";
 #else
-                    return "ca-app-pub-1155937478045283/7758814750";
+                    return "ca-app-pub-3940256099942544/2247696110";
 #endif
                 }
 
