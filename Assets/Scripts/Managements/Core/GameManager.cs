@@ -1,4 +1,5 @@
 using Common.Extensions;
+using Common.ResourceKey;
 using GameWarriors.AdDomain.Abstraction;
 using GameWarriors.AdDomain.Core;
 using GameWarriors.AnalyticDomain.Abstraction;
@@ -25,6 +26,7 @@ using Management.Handlers.Json;
 using Managements.Handlers.Storage;
 using Services.Abstraction;
 using Services.Core;
+using Services.Core.Analytic;
 using Services.Core.App;
 using Services.Core.Tutorial;
 using System;
@@ -37,6 +39,7 @@ namespace Managements.Core
     {
         private Task _buildTask;
 
+        [Inject] private ILogService LogService { get; set; }
         [Inject] private IServiceProvider ServiceProvider { get; set; }
         [Inject] private IEvent Event { get; set; }
         [Inject] private IUpdateTask UpdateTask { get; set; }
@@ -102,6 +105,10 @@ namespace Managements.Core
 
         private async void Start()
         {
+            Debug.Log(Environment.UserName);
+            LogService.EnableTag(Environment.UserName);
+            LogService.LogInfo("hello mahdi", LogKey.MAHDI_TAG_KEY);
+
             QualitySettings.vSyncCount = 1;
             Screen.sleepTimeout = -1;
             await _buildTask;
