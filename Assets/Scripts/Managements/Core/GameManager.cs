@@ -22,12 +22,14 @@ using GameWarriors.TutorialDomain.Abstraction;
 using GameWarriors.TutorialDomain.Core;
 using GameWarriors.UIDomain.Abstraction;
 using GameWarriors.UIDomain.Core;
+using Management.Factory;
 using Management.Handlers.Json;
 using Managements.Handlers.Storage;
 using Services.Abstraction;
 using Services.Core;
 using Services.Core.Analytic;
 using Services.Core.App;
+using Services.Core.Level;
 using Services.Core.Tutorial;
 using System;
 using System.Threading.Tasks;
@@ -82,6 +84,9 @@ namespace Managements.Core
             serviceCollection.AddSingleton<ITutorialService, TutorialService>();
             serviceCollection.AddSingleton<IAppService, AppService>();
             serviceCollection.AddSingleton<IAdvertiseService, AdvertiseService>();
+
+            serviceCollection.AddSingleton<ILevelService, LevelService>();
+            serviceCollection.AddSingleton<ILevelFactory, LevelFactory>();
             AddAdHandler(serviceCollection);
             _buildTask = serviceCollection.Build();
         }

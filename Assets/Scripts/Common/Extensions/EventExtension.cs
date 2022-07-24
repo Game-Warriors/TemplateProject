@@ -7,7 +7,9 @@ namespace Common.Extensions
     {
         OnApplicationStateChange,
         OnApplicationQuit,
-        OnAdAvailable
+        OnAdAvailable,
+        OnStartLoadingLevel,
+        OnCloseLevel
     }
 
     public static class EventExtension
