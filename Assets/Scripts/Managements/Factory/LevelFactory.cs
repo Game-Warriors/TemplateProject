@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Management.Factory
+namespace Managements.Factory
 {
     public class LevelFactory : ILevelFactory
     {

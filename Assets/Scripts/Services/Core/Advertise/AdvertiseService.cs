@@ -21,7 +21,6 @@ namespace Services.Core
 
         public AdvertiseService(IEvent eventSystem, IAdvertise advertise)
         {
-            eventSystem.ListenToInitializeEvent(Initialization);
             _event = eventSystem;
             _advertise = advertise;
             _advertise.OnVideoAvailable += VideoAvailable;

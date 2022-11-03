@@ -8,6 +8,7 @@ using GameWarriors.AudioDomain.Abstraction;
 using GameWarriors.AudioDomain.Core;
 using GameWarriors.DependencyInjection.Attributes;
 using GameWarriors.DependencyInjection.Core;
+using GameWarriors.DependencyInjection.Extensions;
 using GameWarriors.EventDomain.Abstraction;
 using GameWarriors.EventDomain.Core;
 using GameWarriors.PoolDomain.Abstraction;
@@ -22,8 +23,9 @@ using GameWarriors.TutorialDomain.Abstraction;
 using GameWarriors.TutorialDomain.Core;
 using GameWarriors.UIDomain.Abstraction;
 using GameWarriors.UIDomain.Core;
-using Management.Factory;
-using Management.Handlers.Json;
+using Managements.Factory;
+using Managements.Handlers.Audio;
+using Managements.Handlers.Json;
 using Managements.Handlers.Storage;
 using Services.Abstraction;
 using Services.Core;
@@ -39,14 +41,9 @@ namespace Managements.Core
 {
     public class GameManager : MonoBehaviour
     {
-        private Task _buildTask;
-
-        [Inject] private ILogService LogService { get; set; }
-        [Inject] private IServiceProvider ServiceProvider { get; set; }
         [Inject] private IEvent Event { get; set; }
-        [Inject] private IUpdateTask UpdateTask { get; set; }
 
-        private void Awake()
+        private async void Awake()
         {
             ServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<GameManager>(this);
@@ -71,6 +68,7 @@ namespace Managements.Core
 
             serviceCollection.AddSingleton<IAudioLoop, AudioSystem>();
             serviceCollection.AddSingleton<IAudioEffect, AudioSystem>();
+            serviceCollection.AddSingleton<IAudioEventHandler, AudioEventHandler>();
 
             serviceCollection.AddSingleton<IUIEventHandler, UIManager>(GetComponent<UIManager>());
             serviceCollection.AddSingleton<IScreen, UISystem>();
@@ -87,8 +85,12 @@ namespace Managements.Core
 
             serviceCollection.AddSingleton<ILevelService, LevelService>();
             serviceCollection.AddSingleton<ILevelFactory, LevelFactory>();
+
+            serviceCollection.AddSingleton<ILogService, LogService>();
             AddAdHandler(serviceCollection);
-            _buildTask = serviceCollection.Build();
+            QualitySettings.vSyncCount = 1;
+            Screen.sleepTimeout = -1;
+            await serviceCollection.Build(Startup);
         }
 
         private void AddAdHandler(ServiceCollection serviceCollection)
@@ -108,19 +110,17 @@ namespace Managements.Core
 #endif
         }
 
-        private async void Start()
+        private void Startup(IServiceProvider serviceProvider)
         {
             Debug.Log(Environment.UserName);
-            LogService.EnableTag(Environment.UserName);
-            LogService.LogInfo("hello mahdi", LogKey.MAHDI_TAG_KEY);
+            ILogService logService = serviceProvider.GetService<ILogService>();
+            logService?.EnableTag(Environment.UserName);
+            logService?.LogInfo("hello mahdi", LogKey.MAHDI_TAG_KEY);
 
-            QualitySettings.vSyncCount = 1;
-            Screen.sleepTimeout = -1;
-            await _buildTask;
-            _buildTask = null;
+
             GC.Collect();
-            Event.BroadcastInitializeEvent(ServiceProvider);
-            UpdateTask.EnableUpdate();
+            Event.BroadcastStartupEvent(serviceProvider);
+            serviceProvider.GetService<IUpdateTask>()?.EnableUpdate();
         }
 
         private void OnApplicationFocus(bool focus)

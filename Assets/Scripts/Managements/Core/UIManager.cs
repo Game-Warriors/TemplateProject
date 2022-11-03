@@ -12,10 +12,12 @@ namespace Managements.Core
 {
     public class UIManager : MonoBehaviour, IUIEventHandler
     {
+
         private IToastItem _lastToastObject;
         private IEnumerator _lastToast;
         private DateTime _screenShowData;
         private string _currentScreenName;
+        private Action _uiSystemUpdate;
 
         [Inject] private IScreen ScreenHandler { get; set; }
         [Inject] private IEvent EventController { get; set; }
@@ -23,9 +25,9 @@ namespace Managements.Core
         [Inject] private IEvent EventSystem { get; set; }
         [Inject] private IServiceProvider ServiceProvider { get; set; }
 
-        public void Initialization(IServiceProvider serviceProvider)
+        public void Initialization(IUpdateTask updateTask)
         {
-
+            updateTask.RegisterUpdateTask(ManagerUpdate);
         }
 
         public void OnCloseLastScreen()
@@ -95,8 +97,7 @@ namespace Managements.Core
         {
             if (uiUpdate != null)
             {
-                IUpdateTask updateTask = ServiceProvider.GetService<IUpdateTask>();
-                updateTask.RegisterUpdateTask(uiUpdate);
+                _uiSystemUpdate = uiUpdate;
             }
         }
 
@@ -107,6 +108,16 @@ namespace Managements.Core
                 StopCoroutine(_lastToast);
             _lastToast = DisableLastToast(showTimeLength);
             StartCoroutine(_lastToast);
+        }
+
+        public void OnCanvasCameraChange(Camera newCamera)
+        {
+            
+        }
+
+        private void ManagerUpdate()
+        {
+            _uiSystemUpdate?.Invoke();
         }
     }
 }

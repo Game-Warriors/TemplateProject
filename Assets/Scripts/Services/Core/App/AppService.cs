@@ -30,7 +30,6 @@ namespace Services.Core.App
         public AppService(IEvent eventController, IUpdateTask updateTask, IAnalytic analytic)
         {
             _analytic = analytic;
-            eventController.ListenToInitializeEvent(Initialization);
             updateTask.RegisterFixedUpdateTask(TimerUpdate);
         }
 
