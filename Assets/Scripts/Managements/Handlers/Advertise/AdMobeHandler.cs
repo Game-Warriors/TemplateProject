@@ -10,6 +10,7 @@ using System;
 namespace Managements.Handlers.Advertise
 {
     using GameWarriors.AdDomain.Abstraction;
+    using GameWarriors.EventDomain.Abstraction;
 #if ADMOB
     using GoogleMobileAds.Api;
     using System.Collections.Generic;
@@ -68,8 +69,10 @@ namespace Managements.Handlers.Advertise
         }
 
 
-        public void Initialization(Action onInitializeDone, Action onVideoAvailable, Action<EVideoAdState> onVideoUnavailable)
+
+        public void Setup(Action onInitializeDone, Action onVideoAvailable, Action<EVideoAdState> onVideoUnavailable)
         {
+
             _onVideoAvailable = onVideoAvailable;
             _onLoadVideoFailed = onVideoUnavailable;
             MobileAds.Initialize((input) =>
@@ -100,19 +103,7 @@ namespace Managements.Handlers.Advertise
                         break;
                 }
             }
-            _rewardedAd = new RewardedAd(REWARD_AD_ID);
-            // Called when an ad request has successfully loaded.
-            _rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
-            // Called when an ad request failed to load.
-            _rewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad;
-            // Called when an ad is shown.
-            _rewardedAd.OnAdOpening += HandleRewardedAdOpening;
-            // Called when an ad request failed to show.
-            _rewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow;
-            // Called when the user should be rewarded for interacting with the ad.
-            _rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
-            // Called when the ad is closed.
-            _rewardedAd.OnAdClosed += HandleRewardedAdClosed;
+
             onInitializeDone?.Invoke();
         }
 
@@ -214,11 +205,14 @@ namespace Managements.Handlers.Advertise
 
         public void LoadVideoAd()
         {
-            if (_rewardedAd != null)
+            Debug.Log("LoadVideoAd");
+            if (_rewardedAd == null)
             {
-                AdRequest request = new AdRequest.Builder().Build();
-                //request.se.Add("A4B0860103793A14D30DB96346BD45BA");
-                _rewardedAd.LoadAd(request);
+                CreateAndLoadRewardedAd();
+            }
+            else if (_rewardedAd.IsLoaded())
+            {
+                _onVideoAvailable?.Invoke();
             }
         }
 
@@ -230,7 +224,33 @@ namespace Managements.Handlers.Advertise
                 _rewardedAd.Show();
                 return EVideoAdState.Success;
             }
+            else
+            {
+                LoadVideoAd();
+            }
             return EVideoAdState.NoExist;
+        }
+
+
+        public void CreateAndLoadRewardedAd()
+        {
+            _rewardedAd = new RewardedAd(REWARD_AD_ID);
+            // Called when an ad request has successfully loaded.
+            _rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
+            // Called when an ad request failed to load.
+            _rewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad;
+            // Called when an ad is shown.
+            _rewardedAd.OnAdOpening += HandleRewardedAdOpening;
+            // Called when an ad request failed to show.
+            _rewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow;
+            // Called when the user should be rewarded for interacting with the ad.
+            _rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
+            // Called when the ad is closed.
+            _rewardedAd.OnAdClosed += HandleRewardedAdClosed;
+
+            AdRequest request = new AdRequest.Builder().Build();
+            Debug.Log("loadad");
+            _rewardedAd.LoadAd(request);
         }
 
 
@@ -245,6 +265,8 @@ namespace Managements.Handlers.Advertise
 
         private void HandleRewardedAdClosed(object sender, EventArgs e)
         {
+            _rewardedAd = null;
+            LoadVideoAd();
             return;
         }
 
@@ -253,10 +275,13 @@ namespace Managements.Handlers.Advertise
             bool hasReward = e.Amount > 0;
             bool isComplete = true;
             _onAdVideoDone?.Invoke(isComplete, hasReward);
+            LoadVideoAd();
         }
 
         private void HandleRewardedAdFailedToShow(object sender, AdErrorEventArgs e)
         {
+            _rewardedAd = null;
+            LoadVideoAd();
             return;
         }
 
@@ -267,6 +292,7 @@ namespace Managements.Handlers.Advertise
 
         private void HandleRewardedAdFailedToLoad(object sender, AdFailedToLoadEventArgs arg)
         {
+            _rewardedAd = null;
             Debug.LogWarning(arg.LoadAdError);
             _onLoadVideoFailed?.Invoke(0);
             return;
@@ -274,8 +300,10 @@ namespace Managements.Handlers.Advertise
 
         private void HandleRewardedAdLoaded(object sender, EventArgs e)
         {
+            Debug.Log("HandleRewardedAdLoaded");
             _onVideoAvailable?.Invoke();
         }
+
 
     }
 #endif

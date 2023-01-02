@@ -3,27 +3,52 @@ using Common.Extensions;
 using GameWarriors.EventDomain.Abstraction;
 using Services.Abstraction;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using GameWarriors.StorageDomain.Abstraction;
+using GameWarriors.AnalyticDomain.Abstraction;
+using GameWarriors.AnalyticDomain.Extension;
+using Common.ResourceKey;
+using GameWarriors.TaskDomain.Abstraction;
 
 namespace Services.Core
 {
     public class AdvertiseService : IAdvertiseService
     {
+        private const string NO_ADS_KEY = "No_Ads";
+
         private readonly IEvent _event;
         private readonly IAdvertise _advertise;
+        private readonly IAdInterstitialHandler _adInterstitialHandler;
+
         private Action<bool> _onDone;
         private bool _hasReward;
+        private bool _isShowDone;
+
+        private readonly IAnalytic _analytic;
+        private readonly IStorage _storage;
 
         public bool IsAdAvailable => _advertise.IsVideoAdExist;
-        public bool IsNoAds { get; private set; }
+        public bool IsNoAds => _storage.GetValue<bool>(NO_ADS_KEY, false);
 
-        public AdvertiseService(IEvent eventSystem, IAdvertise advertise)
+        [UnityEngine.Scripting.Preserve]
+        public AdvertiseService(IEvent eventSystem, IAdvertise advertise, IStorage storage, IAnalytic analytic, IAdInterstitialHandler adInterstitialHandler, IUpdateTask updateTask)
         {
+            _analytic = analytic;
+            _storage = storage;
             _event = eventSystem;
             _advertise = advertise;
-            _advertise.OnVideoAvailable += VideoAvailable;
+            updateTask.RegisterUpdateTask(ServiceUpdate);
+            _adInterstitialHandler = adInterstitialHandler;
+        }
+
+
+        [UnityEngine.Scripting.Preserve]
+        public void Initialization()
+        {
+            _event.ListenToEvent<bool>(EEventType.OnApplicationStateChange, ApplicationStateChange);
+        }
+
+        private void OnAdmobVideoInited()
+        {
         }
 
         public void RequestAd()
@@ -39,39 +64,16 @@ namespace Services.Core
                 onDone?.Invoke(true);
                 return;
             }
-
             _onDone = onDone;
-#if DEVELOPMENT
-            FakeAdvertisePanel screen = _screenHandler.ShowScreen<FakeAdvertisePanel>(FakeAdvertisePanel.SCREEN_NAME, ECanvasType.ScreenCanvas, EPreviosScreenAct.Stay);
-            screen.SetData(onDone);
-#elif DEVELOPMENT_RELEASE //&& !UNITY_EDITOR
-            UnityEngine.Debug.Log("ShowAd");
-            IsAdvertiseSeenLastInSeconds = true;
-            _advertise.ShowVideoAd(ShowVideoDone, ShowVideoFailed);
-#else
-            //IsAdvertiseSeenLastInSeconds = true;
-            _advertise.ShowVideoAd(ShowVideoDone, ShowVideoFailed);
-#endif
+
+            _advertise.ShowVideoAd(ShowVideoDone, null);
         }
 
-        private void Initialization(IServiceProvider serviceProvider)
-        {
-
-            _event.ListenToEvent<bool>(EEventType.OnApplicationStateChange, ApplicationStateChange);
-
-            //GoogleMobileAds.Api.Mediation.AppLovin.AppLovin.Initialize();
-            //GoogleMobileAds.Api.Mediation.AppLovin.AppLovin.SetHasUserConsent(true);
-            //GoogleMobileAds.Api.Mediation.UnityAds.UnityAds.SetGDPRConsentMetaData(true);
-            //GoogleMobileAds.Api.Mediation.IronSource.IronSource.SetConsent(true);
-            //GoogleMobileAds.Api.Mediation.Chartboost.Chartboost.AddDataUseConsent(GoogleMobileAds.Api.Mediation.Chartboost.CBGDPRDataUseConsent.Behavioral);
-
-        }
 
         private void ShowVideoDone(bool isComplete, bool hasReward)
         {
-            UnityEngine.Debug.Log("ShowVideoDone");
-            _onDone?.Invoke(true);
-            _hasReward = true;
+            _isShowDone = true;
+            _hasReward = hasReward;
         }
 
         private void ShowVideoFailed()
@@ -89,6 +91,32 @@ namespace Services.Core
         {
             if (state)
                 _advertise.LoadVideoAd();
+        }
+
+        public void SetNoAds()
+        {
+            _storage.SetValue<bool>(NO_ADS_KEY, true);
+        }
+
+        public void LoadInterstitialAd()
+        {
+            _adInterstitialHandler.LoadInterstitialAd();
+        }
+
+        public void ShowInterstitialAd()
+        {
+            _adInterstitialHandler.ShowInterstitialAd();
+        }
+
+        private void ServiceUpdate()
+        {
+            if (_isShowDone)
+            {
+                //_analytic.CustomEvent(AnalyticKeys.RV_FINISH);
+                _onDone?.Invoke(_hasReward);
+                _isShowDone = false;
+                _hasReward = false;
+            }
         }
     }
 }
