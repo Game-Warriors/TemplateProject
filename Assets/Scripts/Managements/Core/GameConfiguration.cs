@@ -55,7 +55,11 @@ namespace Managements.Core
         [Inject]
         private GameManager Manager { get; set; }
 
+        public float WaitAfterNotExsit => 6;
 
+        public float WaitAfterNoInternet => 400;
+
+        public float DelayWhenIsRequesting => 200;
 
         [UnityEngine.Scripting.Preserve]
         public GameConfiguration()

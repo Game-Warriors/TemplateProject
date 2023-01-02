@@ -1,0 +1,27 @@
+{
+    "name": "PlayMode",
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "GameWarriors.DependencyInjection.Runtime",
+        "GameWarriors.TaskDomain.Runtime",
+        "GameWarriors.PoolDomain.Runtime",
+        "GameWarriors.EventDomain.Runtime",
+        "GameWarriors.UIDomain.Runtime",
+        "GameWarriors.TimeDomain.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
