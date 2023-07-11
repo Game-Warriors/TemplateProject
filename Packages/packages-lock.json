@@ -5,35 +5,35 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "776cefedfc6ab804a534d38309056bce86655bb1"
+      "hash": "a3d5a12c577e6493e5a1bb9dad821a18be383aee"
     },
     "com.gamewarriors.analyticsystem": {
       "version": "https://github.com/Game-Warriors/AnalyticDomain-Unity3d.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "ef9bf5cb42fe97a7158a39889d571b30476e14a6"
+      "hash": "e884237bd064af5f786d9baf366d5459afc26ed1"
     },
     "com.gamewarriors.audiosystem": {
       "version": "https://github.com/Game-Warriors/AudioDomain-Unity3d.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "3bbc225d8498bf6b62af6b7cba3745285b062c42"
+      "hash": "1f3ec6da644d36c39d9225fca93aecc984c21a09"
     },
     "com.gamewarriors.buildconfiguration": {
       "version": "https://github.com/Game-Warriors/BuildConfiguration-Unity3d.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "6d76e6f306e21862e97cffaf017d4559c7c60df2"
+      "hash": "b92eea47d3724e3b631ba69147c23e1e1823592b"
     },
     "com.gamewarriors.dependencyinjection": {
       "version": "https://github.com/Game-Warriors/DependencyInjection-Unity3d.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "d33645b642346efa75904d1c47d50290853c5d60"
+      "hash": "8aa1d1266a0b89299b9817a1ade2209286b0ab12"
     },
     "com.gamewarriors.engagementsystem": {
       "version": "https://github.com/Game-Warriors/EngagementDomain-Unity3d.git",
@@ -47,35 +47,42 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "6484ac4b5b4766aa99762b82eb453dc7c415ab9f"
+      "hash": "bac6dc61cdc55851629e1f2ce48c0c4a7addeda2"
+    },
+    "com.gamewarriors.localization": {
+      "version": "https://github.com/Game-Warriors/Localization-Unity3d.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "7a4c919cea6437a1a8d1588d42682243ddd68827"
     },
     "com.gamewarriors.poolsystem": {
       "version": "https://github.com/Game-Warriors/PoolDomain-Unity3d.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "e3008fce70583aacdb4c573ed9a4c4b0a44dda21"
+      "hash": "15dc254bc3fccaa51c691c44889908c1cfc585cf"
     },
     "com.gamewarriors.resourcesystem": {
       "version": "https://github.com/Game-Warriors/ResourceDomain-Unity3d.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "b4adfab8558b0c5b40861340a3d55917a2e8ee6f"
+      "hash": "bd43edec70734ce860625c1043a7d7a256fd5905"
     },
     "com.gamewarriors.storagesystem": {
       "version": "https://github.com/Game-Warriors/StorageDomain.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "7f55b9b448b6e38a141331a70e835823ea0cc8f3"
+      "hash": "2fb60f155af1a19f0c47ac02f6d6b4322e5a8012"
     },
     "com.gamewarriors.tasksystem": {
       "version": "https://github.com/Game-Warriors/TaskDomain-Unity3d.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "185a8e861bd80be8dec728095ab93bcba226a086"
+      "hash": "8a4b6f08000f6f4cf368e097ca1e2045493f50b2"
     },
     "com.gamewarriors.terminalsystem": {
       "version": "https://github.com/Game-Warriors/TerminalDomain-Unity3d.git",
@@ -91,7 +98,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "302c02eda992dcd9de56d63f3675655ab10e87c4"
+      "hash": "69506d07a76479187887a2349c78988be2f06cf3"
     },
     "com.gamewarriors.tutorialsystem": {
       "version": "https://github.com/Game-Warriors/TutorialDomain-Unity3d.git",
@@ -105,14 +112,14 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "35e38324cea0210deee6406f209955bf63a492ab"
+      "hash": "88264344d6ee983631d865be48aa42906aaf57ff"
     },
     "com.unity.2d.animation": {
-      "version": "7.0.8",
+      "version": "7.0.10",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.2d.common": "6.0.5",
+        "com.unity.2d.common": "6.0.6",
         "com.unity.2d.sprite": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
         "com.unity.modules.uielements": "1.0.0"
@@ -120,7 +127,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.2d.common": {
-      "version": "6.0.5",
+      "version": "6.0.6",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -139,19 +146,19 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.2d.pixel-perfect": {
-      "version": "5.0.1",
+      "version": "5.0.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.2d.psdimporter": {
-      "version": "6.0.6",
+      "version": "6.0.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.2d.animation": "7.0.8",
-        "com.unity.2d.common": "6.0.5",
+        "com.unity.2d.animation": "7.0.9",
+        "com.unity.2d.common": "6.0.6",
         "com.unity.2d.sprite": "1.0.0"
       },
       "url": "https://packages.unity.com"
@@ -163,12 +170,12 @@
       "dependencies": {}
     },
     "com.unity.2d.spriteshape": {
-      "version": "7.0.6",
+      "version": "7.0.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.1.0",
-        "com.unity.2d.common": "6.0.4",
+        "com.unity.2d.common": "6.0.6",
         "com.unity.2d.path": "5.0.2",
         "com.unity.modules.physics2d": "1.0.0"
       },
@@ -197,7 +204,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.17",
+      "version": "2.0.18",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -227,7 +234,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.mobile.notifications": {
-      "version": "2.0.2",
+      "version": "2.1.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -256,7 +263,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.6.4",
+      "version": "1.6.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {

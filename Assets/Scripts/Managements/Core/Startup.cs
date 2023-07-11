@@ -1,4 +1,19 @@
 using Common.Extensions;
+using GameWarriors.EventDomain.Abstraction;
+using GameWarriors.EventDomain.Core;
+using Managements.Core.UI;
+using Services.Abstraction;
+using System;
+using UnityEngine;
+using GameWarriors.PoolDomain.Abstraction;
+using Services.Core.App;
+using GameWarriors.UIDomain.Abstraction;
+using GameWarriors.UIDomain.Core;
+using GameWarriors.DependencyInjection.Core;
+using Services.Core.Analytic;
+using GameWarriors.TaskDomain.Abstraction;
+using GameWarriors.TaskDomain.Core;
+using GameWarriors.PoolDomain.Core;
 using Common.ResourceKey;
 using GameWarriors.AdDomain.Abstraction;
 using GameWarriors.AdDomain.Core;
@@ -6,78 +21,79 @@ using GameWarriors.AnalyticDomain.Abstraction;
 using GameWarriors.AnalyticDomain.Core;
 using GameWarriors.AudioDomain.Abstraction;
 using GameWarriors.AudioDomain.Core;
-using GameWarriors.DependencyInjection.Attributes;
-using GameWarriors.DependencyInjection.Core;
 using GameWarriors.DependencyInjection.Extensions;
-using GameWarriors.EventDomain.Abstraction;
-using GameWarriors.EventDomain.Core;
-using GameWarriors.PoolDomain.Abstraction;
-using GameWarriors.PoolDomain.Core;
 using GameWarriors.ResourceDomain.Abstraction;
 using GameWarriors.ResourceDomain.Core;
 using GameWarriors.StorageDomain.Abstraction;
 using GameWarriors.StorageDomain.Core;
-using GameWarriors.TaskDomain.Abstraction;
-using GameWarriors.TaskDomain.Core;
 using GameWarriors.TutorialDomain.Abstraction;
 using GameWarriors.TutorialDomain.Core;
-using GameWarriors.UIDomain.Abstraction;
-using GameWarriors.UIDomain.Core;
+using Managements.Core;
 using Managements.Factory;
 using Managements.Handlers.Audio;
 using Managements.Handlers.Json;
-using Managements.Handlers.Storage;
-using Services.Abstraction;
-using Services.Core;
-using Services.Core.Analytic;
-using Services.Core.App;
 using Services.Core.Level;
 using Services.Core.Tutorial;
-using System;
-using System.Threading.Tasks;
-using UnityEngine;
+using Services.Core;
+using GameWarriors.LocalizeDomain.Abstraction;
+using GameWarriors.LocalizeDomain.Core;
 
-namespace Managements.Core
+namespace Management.Core
 {
-    public class GameManager : MonoBehaviour
+    /// <summary>
+    /// Main and top manager class, start and end application lifecycle and handler application Type (3D and 2D).
+    /// </summary>
+    public class Startup : MonoBehaviour
     {
-        [Inject] private IEvent Event { get; set; }
+        public const string INIT_METHOD_NAME = "Initialization";
+
+        [SerializeField] private GameObject _splash;
+
+        public bool IsStarted { get; private set; }
 
         private async void Awake()
         {
             ServiceCollection serviceCollection = new ServiceCollection();
-            serviceCollection.AddSingleton<GameManager>(this);
+            serviceCollection.AddSingleton<MainManager>(GetComponent<MainManager>());
             serviceCollection.AddSingleton<UIManager>(GetComponent<UIManager>());
             serviceCollection.AddSingleton<IEvent, EventSystem>();
+
             serviceCollection.AddSingleton<IUpdateTask, TaskSystem>();
             serviceCollection.AddSingleton<ITaskRunner, TaskSystem>();
-            serviceCollection.AddSingleton<IAnalytic, AnalyticSystem>();
-            serviceCollection.AddSingleton<IPool, PoolSystem>();
-            serviceCollection.AddSingleton<ITutorial, TutorialSystem>();
-            serviceCollection.AddSingleton<IAdvertise, AdSystem>();
+            serviceCollection.AddSingleton<ITimerTask, TaskSystem>();
 
-            serviceCollection.AddSingleton<IVariableDatabase, ResourceSystem>();
+            serviceCollection.AddSingleton<IAnalytic, AnalyticSystem>(input => input.WaitForLoading());
+
+            serviceCollection.AddSingleton<IPool, PoolSystem>(input => input.WaitForLoading());
+            serviceCollection.AddSingleton<IBehaviorInitializer<string>, CompondInitializer>();
+
+            serviceCollection.AddSingleton<ITutorial, TutorialSystem>();
+            serviceCollection.AddSingleton<IAdvertise, AdSystem>(input => input.WaitForLoading());
+
+            serviceCollection.AddSingleton<IVariableDatabase, ResourceSystem>(input => input.WaitForLoading());
             serviceCollection.AddSingleton<IContentDatabase, ResourceSystem>();
             serviceCollection.AddSingleton<ISpriteDatabase, ResourceSystem>();
 
             serviceCollection.AddSingleton<IStorageJsonHandler, DefaultJsonHandler>();
-            serviceCollection.AddSingleton<IStorage, StorageSystem>();
-            serviceCollection.AddSingleton<IStorageConfig, GameConfiguration>();
-            serviceCollection.AddSingleton<IStorageEventHandler, StorageEventHandler>();
+            serviceCollection.AddSingleton<IStorage, StorageSystem>(input => input.WaitForLoading());
+            serviceCollection.AddSingleton<IStorageConfig, MainConfiguration>();
+            serviceCollection.AddSingleton<IStorageOperations, StorageSystem>();
             serviceCollection.AddSingleton<IFileHandler, FileHandler>();
 
-            serviceCollection.AddSingleton<IAudioLoop, AudioSystem>();
+            serviceCollection.AddSingleton<IAudioLoop, AudioSystem>(input => input.WaitForLoading());
             serviceCollection.AddSingleton<IAudioEffect, AudioSystem>();
             serviceCollection.AddSingleton<IAudioEventHandler, AudioEventHandler>();
 
+            serviceCollection.AddSingleton<ILocalize, LocalizationSystem>(input => input.WaitForLoading());
+
             serviceCollection.AddSingleton<IUIEventHandler, UIManager>(GetComponent<UIManager>());
-            serviceCollection.AddSingleton<IScreen, UISystem>();
+            serviceCollection.AddSingleton<IScreen, UISystem>(input => input.WaitForLoading());
             serviceCollection.AddSingleton<IToast, UISystem>();
             serviceCollection.AddSingleton<IAspectRatio, UISystem>();
 
-            serviceCollection.AddSingleton<IAnalyticConfig, GameConfiguration>();
-            serviceCollection.AddSingleton<IResourceConfig, GameConfiguration>();
-            serviceCollection.AddSingleton<IAdvertiseConfig, GameConfiguration>();
+            serviceCollection.AddSingleton<IAnalyticConfig, MainConfiguration>();
+            serviceCollection.AddSingleton<IResourceConfig, MainConfiguration>();
+            serviceCollection.AddSingleton<IAdvertiseConfig, MainConfiguration>();
 
             serviceCollection.AddSingleton<ITutorialService, TutorialService>();
             serviceCollection.AddSingleton<IAppService, AppService>();
@@ -88,9 +104,8 @@ namespace Managements.Core
 
             serviceCollection.AddSingleton<ILogService, LogService>();
             AddAdHandler(serviceCollection);
-            QualitySettings.vSyncCount = 1;
             Screen.sleepTimeout = -1;
-            await serviceCollection.Build(Startup);
+            await serviceCollection.Build(StartupDone);
         }
 
         private void AddAdHandler(ServiceCollection serviceCollection)
@@ -110,8 +125,12 @@ namespace Managements.Core
 #endif
         }
 
-        private void Startup(IServiceProvider serviceProvider)
+        private void StartupDone(IServiceProvider serviceProvider)
         {
+            QualitySettings.vSyncCount = 1;
+            Application.runInBackground = true;
+            Application.targetFrameRate = 50;
+            QualitySettings.vSyncCount = 2;
             Debug.Log(Environment.UserName);
             ILogService logService = serviceProvider.GetService<ILogService>();
             logService?.EnableTag(Environment.UserName);
@@ -119,18 +138,12 @@ namespace Managements.Core
 
 
             GC.Collect();
-            Event.BroadcastStartupEvent(serviceProvider);
+            serviceProvider.GetService<IEvent>().BroadcastStartupEvent(serviceProvider);
             serviceProvider.GetService<IUpdateTask>()?.EnableUpdate();
-        }
-
-        private void OnApplicationFocus(bool focus)
-        {
-            Event?.BroadcastEvent(EEventType.OnApplicationStateChange, focus);
-        }
-
-        private void OnApplicationQuit()
-        {
-            Event.BroadcastEvent(EEventType.OnApplicationQuit);
+            IsStarted = true;
+            if (_splash)
+                Destroy(_splash);
+            Destroy(this);
         }
     }
 }

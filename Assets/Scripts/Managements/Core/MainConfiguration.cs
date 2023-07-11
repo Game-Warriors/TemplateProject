@@ -1,17 +1,14 @@
 using GameWarriors.AdDomain.Abstraction;
 using GameWarriors.AnalyticDomain.Abstraction;
-using GameWarriors.DependencyInjection.Attributes;
 using GameWarriors.ResourceDomain.Abstraction;
 using GameWarriors.StorageDomain.Abstraction;
-using Managements.Handlers.Analytics;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Managements.Core
 {
-    public class GameConfiguration : IAnalyticConfig, IResourceConfig, IAdvertiseConfig, IStorageConfig
+    public class MainConfiguration : IAnalyticConfig, IResourceConfig, IAdvertiseConfig, IStorageConfig
     {
         private readonly IAnalyticHandler[] Analytics_Handlers = {
 #if GAME_ANALYTICS
@@ -52,8 +49,8 @@ namespace Managements.Core
         string IStorageConfig.DirectoryPrefix => "0";
         int IStorageConfig.SaveingInterval => 15;
 
-        [Inject]
-        private GameManager Manager { get; set; }
+        [Preserve]
+        private MainManager Manager { get; set; }
 
         public float WaitAfterNotExsit => 6;
 
@@ -61,8 +58,12 @@ namespace Managements.Core
 
         public float DelayWhenIsRequesting => 200;
 
+        public IRewardedAdPlace DefaultVideoAdPlace => throw new System.NotSupportedException();
+
+        public IInterstitialAdPlace DefaultInterstitialPlace => throw new System.NotSupportedException();
+
         [UnityEngine.Scripting.Preserve]
-        public GameConfiguration()
+        public MainConfiguration()
         {            
             _key = Encoding.ASCII.GetBytes("123456789123456789123456");
             _iv = Encoding.ASCII.GetBytes("1234567891234567");

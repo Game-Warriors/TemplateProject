@@ -1,14 +1,13 @@
 using GameWarriors.AnalyticDomain.Abstraction;
-
 using GameWarriors.EventDomain.Abstraction;
-using GameWarriors.ResourceDomain.Abstraction;
 using Services.Abstraction;
 using System;
 using GameWarriors.TaskDomain.Abstraction;
 using UnityEngine;
 using GameWarriors.AnalyticDomain.Extension;
+using Common.Extensions;
+using GameWarriors.StorageDomain.Abstraction;
 using Common.ResourceKey;
-
 #if APPS_FLYER
 using AppsFlyerSDK;
 #endif
@@ -17,7 +16,7 @@ namespace Services.Core.App
 {
 
 #if APPS_FLYER
-    public class AppService : IAppService , IAppsFlyerConversionData
+    public class AppService : IAppService, IAppsFlyerConversionData
 #else
     public class AppService : IAppService
 #endif
@@ -26,11 +25,26 @@ namespace Services.Core.App
         private float _timer;
         private int _playedMinuets;
 
+        public bool IsInternetAvailable => Application.internetReachability != NetworkReachability.NotReachable;
+
+
         [UnityEngine.Scripting.Preserve]
-        public AppService(IEvent eventController, IUpdateTask updateTask, IAnalytic analytic)
+        public AppService(IEvent eventController, IUpdateTask updateTask, IAnalytic analytic, IFileHandler fileHandler, IStorageOperations storageOperations, IStorage storage)
         {
             _analytic = analytic;
             updateTask.RegisterFixedUpdateTask(TimerUpdate);
+            updateTask.RegisterUpdateTask(() =>
+            {
+                storageOperations.StorageUpdate(Time.deltaTime);
+            });
+            eventController.ListenToEvent(EEventType.OnApplicationQuit, storageOperations.ForceSave);
+            eventController.ListenToEvent<bool>(EEventType.OnApplicationStateChange, state =>
+            {
+                if (!state)
+                    storageOperations.ForceSave();
+            });
+            fileHandler.LogErrorListener += LogError;
+            storageOperations.LogErrorListener += LogError;
         }
 
         public void Initialization(IServiceProvider serviceProvider)
@@ -102,9 +116,15 @@ namespace Services.Core.App
             {
                 _timer = 0;
                 ++_playedMinuets;
-                _analytic.CustomEvent("timer", "minuets", _playedMinuets, EAnalyticType.AppsFlyer);
+                _analytic.CustomEvent("timer", "minuets", _playedMinuets, AnalyticTypes.APPS_FLYER);
             }
         }
+
+        private void LogError(string message)
+        {
+            Debug.LogError(message);
+        }
+
     }
 
 }

@@ -6,6 +6,6 @@ namespace Services.Abstraction
 {
     public interface IAppService
     {
-
+        bool IsInternetAvailable { get; }
     }
 }

@@ -1,14 +1,13 @@
-using GameWarriors.DependencyInjection.Attributes;
 using GameWarriors.DependencyInjection.Extensions;
 using GameWarriors.EventDomain.Abstraction;
 using GameWarriors.TaskDomain.Abstraction;
 using GameWarriors.UIDomain.Abstraction;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
-namespace Managements.Core
+namespace Managements.Core.UI
 {
     public class UIManager : MonoBehaviour, IUIEventHandler
     {
@@ -19,11 +18,11 @@ namespace Managements.Core
         private string _currentScreenName;
         private Action _uiSystemUpdate;
 
-        [Inject] private IScreen ScreenHandler { get; set; }
-        [Inject] private IEvent EventController { get; set; }
-        [Inject] private ITaskRunner TaskRunner { get; set; }
-        [Inject] private IEvent EventSystem { get; set; }
-        [Inject] private IServiceProvider ServiceProvider { get; set; }
+        [Preserve] private IScreen ScreenHandler { get; set; }
+        [Preserve] private IEvent EventController { get; set; }
+        [Preserve] private ITaskRunner TaskRunner { get; set; }
+        [Preserve] private IEvent EventSystem { get; set; }
+        [Preserve] private IServiceProvider ServiceProvider { get; set; }
 
         public void Initialization(IUpdateTask updateTask)
         {

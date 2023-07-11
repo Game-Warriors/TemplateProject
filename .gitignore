@@ -58,3 +58,10 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+remote_config_data
+UserSettings/Layouts
+UserSettings/Layouts/default-2021.dwlt
+UserSettings/AndroidLogcatSettings.asset
+
+# rider's local settings
+.idea/
