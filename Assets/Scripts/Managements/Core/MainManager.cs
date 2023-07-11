@@ -41,7 +41,13 @@ namespace Managements.Core
     {
         [Preserve] private IEvent Event { get; set; }
 
+        public static IServiceProvider ServiceProvider { get; set; }
 
+        [Preserve]
+        private void Initialization(IServiceProvider serviceProvider)
+        {
+            ServiceProvider = serviceProvider;
+        }
 
         private void OnApplicationFocus(bool focus)
         {

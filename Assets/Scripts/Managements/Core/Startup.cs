@@ -38,7 +38,7 @@ using Services.Core;
 using GameWarriors.LocalizeDomain.Abstraction;
 using GameWarriors.LocalizeDomain.Core;
 
-namespace Management.Core
+namespace Managements.Core
 {
     /// <summary>
     /// Main and top manager class, start and end application lifecycle and handler application Type (3D and 2D).

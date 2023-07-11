@@ -9,6 +9,15 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
+/[Bb]uildReports
+/[Aa]ssets/BuildReports
+/[Ss]erverData/
+
+/0_Storage
+
+# Temporary auto-generated Android Assets
+/[Aa]ssets/[Ss]treamingAssets/aa.meta
+/[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
@@ -53,10 +62,15 @@ sysinfo.txt
 
 # Builds
 *.apk
+*.aab
 *.unitypackage
+*.app
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+UserSettings/
+*.keystore
 
 remote_config_data
 UserSettings/Layouts
@@ -65,3 +79,10 @@ UserSettings/AndroidLogcatSettings.asset
 
 # rider's local settings
 .idea/
+
+# Vscode cache directory
+.vscode/*
+.history/
+
+# MacOS
+.DS_Store
