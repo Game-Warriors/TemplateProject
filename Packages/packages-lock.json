@@ -47,7 +47,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "bac6dc61cdc55851629e1f2ce48c0c4a7addeda2"
+      "hash": "f9a395bf18b806b9747c2b6efe968b0f170fae14"
     },
     "com.gamewarriors.localization": {
       "version": "https://github.com/Game-Warriors/Localization-Unity3d.git",
@@ -61,28 +61,28 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "15dc254bc3fccaa51c691c44889908c1cfc585cf"
+      "hash": "5a370b4fd1f0b98b3a997f6ed35957f46e1cf006"
     },
     "com.gamewarriors.resourcesystem": {
       "version": "https://github.com/Game-Warriors/ResourceDomain-Unity3d.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "bd43edec70734ce860625c1043a7d7a256fd5905"
+      "hash": "88325de78dca206fdc65f48b3767742d84bedead"
     },
     "com.gamewarriors.storagesystem": {
       "version": "https://github.com/Game-Warriors/StorageDomain.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "2fb60f155af1a19f0c47ac02f6d6b4322e5a8012"
+      "hash": "e812ad51120ec7d93e9a884e0efbe3bac424d54f"
     },
     "com.gamewarriors.tasksystem": {
       "version": "https://github.com/Game-Warriors/TaskDomain-Unity3d.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "8a4b6f08000f6f4cf368e097ca1e2045493f50b2"
+      "hash": "a4078765dec4cc955fc14e674a83618e18a271a6"
     },
     "com.gamewarriors.terminalsystem": {
       "version": "https://github.com/Game-Warriors/TerminalDomain-Unity3d.git",
@@ -98,7 +98,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "69506d07a76479187887a2349c78988be2f06cf3"
+      "hash": "822d3c0f5ec12c9eab3bac1be027a9dd08f8c2ed"
     },
     "com.gamewarriors.tutorialsystem": {
       "version": "https://github.com/Game-Warriors/TutorialDomain-Unity3d.git",
@@ -112,7 +112,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "88264344d6ee983631d865be48aa42906aaf57ff"
+      "hash": "f50931ee134e946835734115d4d39fdc4d008ce0"
     },
     "com.unity.2d.animation": {
       "version": "7.0.10",

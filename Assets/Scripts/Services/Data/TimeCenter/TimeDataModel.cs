@@ -23,7 +23,7 @@ namespace Services.Data.TimeCenter
 
         public bool IsEncrypt => false;
 
-        public string FileName => FILE_NAME;
+        public string ModelName => FILE_NAME;
 
         public Type DataType => typeof(TimeDataModel);
 

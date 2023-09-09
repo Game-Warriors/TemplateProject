@@ -2,7 +2,7 @@ using GameWarriors.DependencyInjection.Extensions;
 using GameWarriors.LocalizeDomain.Abstraction;
 using UnityEngine;
 
-namespace Managements.Core.UI
+namespace Managements.Core.UserInterface
 {
     public class LocalizationUpdateText : MonoBehaviour
     {

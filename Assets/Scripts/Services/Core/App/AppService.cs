@@ -29,7 +29,7 @@ namespace Services.Core.App
 
 
         [UnityEngine.Scripting.Preserve]
-        public AppService(IEvent eventController, IUpdateTask updateTask, IAnalytic analytic, IFileHandler fileHandler, IStorageOperations storageOperations, IStorage storage)
+        public AppService(IEvent eventController, IUpdateTask updateTask, IAnalytic analytic, IStorageOperation storageOperations)
         {
             _analytic = analytic;
             updateTask.RegisterFixedUpdateTask(TimerUpdate);
@@ -43,7 +43,6 @@ namespace Services.Core.App
                 if (!state)
                     storageOperations.ForceSave();
             });
-            fileHandler.LogErrorListener += LogError;
             storageOperations.LogErrorListener += LogError;
         }
 

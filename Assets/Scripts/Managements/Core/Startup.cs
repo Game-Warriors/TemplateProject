@@ -1,7 +1,7 @@
 using Common.Extensions;
 using GameWarriors.EventDomain.Abstraction;
 using GameWarriors.EventDomain.Core;
-using Managements.Core.UI;
+using Managements.Core.UserInterface;
 using Services.Abstraction;
 using System;
 using UnityEngine;
@@ -53,7 +53,7 @@ namespace Managements.Core
 
         private async void Awake()
         {
-            ServiceCollection serviceCollection = new ServiceCollection();
+            ServiceCollection serviceCollection = new ServiceCollection(INIT_METHOD_NAME);
             serviceCollection.AddSingleton<MainManager>(GetComponent<MainManager>());
             serviceCollection.AddSingleton<UIManager>(GetComponent<UIManager>());
             serviceCollection.AddSingleton<IEvent, EventSystem>();
@@ -73,12 +73,14 @@ namespace Managements.Core
             serviceCollection.AddSingleton<IVariableDatabase, ResourceSystem>(input => input.WaitForLoading());
             serviceCollection.AddSingleton<IContentDatabase, ResourceSystem>();
             serviceCollection.AddSingleton<ISpriteDatabase, ResourceSystem>();
-
-            serviceCollection.AddSingleton<IStorageJsonHandler, DefaultJsonHandler>();
+            #if FIREBASE
+            serviceCollection.AddSingleton<IRemoteDataHandler, FirebaseRemoteHandler>();
+            #endif
+            serviceCollection.AddSingleton<IStorageSerializationHandler, DefaultJsonHandler>();
             serviceCollection.AddSingleton<IStorage, StorageSystem>(input => input.WaitForLoading());
             serviceCollection.AddSingleton<IStorageConfig, MainConfiguration>();
-            serviceCollection.AddSingleton<IStorageOperations, StorageSystem>();
-            serviceCollection.AddSingleton<IFileHandler, FileHandler>();
+            serviceCollection.AddSingleton<IStorageOperation, StorageSystem>();
+            serviceCollection.AddSingleton<IPersistDataHandler, FileHandler>();
 
             serviceCollection.AddSingleton<IAudioLoop, AudioSystem>(input => input.WaitForLoading());
             serviceCollection.AddSingleton<IAudioEffect, AudioSystem>();
@@ -87,7 +89,7 @@ namespace Managements.Core
             serviceCollection.AddSingleton<ILocalize, LocalizationSystem>(input => input.WaitForLoading());
 
             serviceCollection.AddSingleton<IUIEventHandler, UIManager>(GetComponent<UIManager>());
-            serviceCollection.AddSingleton<IScreen, UISystem>(input => input.WaitForLoading());
+            serviceCollection.AddSingleton<IScreenStack, UISystem>(input => input.WaitForLoading());
             serviceCollection.AddSingleton<IToast, UISystem>();
             serviceCollection.AddSingleton<IAspectRatio, UISystem>();
 

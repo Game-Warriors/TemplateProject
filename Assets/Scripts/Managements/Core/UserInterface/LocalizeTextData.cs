@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Managements.Core.UI
+namespace Managements.Core.UserInterface
 {
     [System.Serializable]
     public struct LocalizeTextData 

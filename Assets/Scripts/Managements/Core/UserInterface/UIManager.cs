@@ -2,12 +2,13 @@ using GameWarriors.DependencyInjection.Extensions;
 using GameWarriors.EventDomain.Abstraction;
 using GameWarriors.TaskDomain.Abstraction;
 using GameWarriors.UIDomain.Abstraction;
+using GameWarriors.UIDomain.Core;
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Scripting;
 
-namespace Managements.Core.UI
+namespace Managements.Core.UserInterface
 {
     public class UIManager : MonoBehaviour, IUIEventHandler
     {
@@ -16,24 +17,25 @@ namespace Managements.Core.UI
         private IEnumerator _lastToast;
         private DateTime _screenShowData;
         private string _currentScreenName;
-        private Action _uiSystemUpdate;
 
-        [Preserve] private IScreen ScreenHandler { get; set; }
+
+        [Preserve] private IScreenStack ScreenHandler { get; set; }
         [Preserve] private IEvent EventController { get; set; }
         [Preserve] private ITaskRunner TaskRunner { get; set; }
         [Preserve] private IEvent EventSystem { get; set; }
         [Preserve] private IServiceProvider ServiceProvider { get; set; }
 
-        public void Initialization(IUpdateTask updateTask)
+        public void Initialization(IUpdateTask updateTask, IScreenStack screenStack, IServiceProvider serviceProvider, IToast toast,IUIOperation uiOperation)
         {
-            updateTask.RegisterUpdateTask(ManagerUpdate);
+            BaseScreenItem.Initialization(screenStack, serviceProvider, toast);
+            updateTask.RegisterUpdateTask(uiOperation.SystemUpdate);
         }
 
         public void OnCloseLastScreen()
         {
         }
 
-        public void OnOpenScreen(IUIScreen screen)
+        public void OnOpenScreen(IScreenItem screen)
         {
             if (screen.HasLogEvent)
             {
@@ -42,7 +44,7 @@ namespace Managements.Core.UI
             }
         }
 
-        public void OnShowScreen(IUIScreen screen)
+        public void OnShowScreen(IScreenItem screen)
         {
             if (screen.HasLogEvent)
             {
@@ -53,7 +55,7 @@ namespace Managements.Core.UI
             //play audio
         }
 
-        public void OnCloseScreen(IUIScreen screen)
+        public void OnCloseScreen(IScreenItem screen)
         {
             if (screen.HasLogEvent)
             {
@@ -64,7 +66,7 @@ namespace Managements.Core.UI
             }
         }
 
-        public void OnHideScreen(IUIScreen screen)
+        public void OnHideScreen(IScreenItem screen)
         {
             if (screen.HasLogEvent)
             {
@@ -75,7 +77,7 @@ namespace Managements.Core.UI
             }
         }
 
-        public void OnScreenForceClose(IUIScreen screen)
+        public void OnScreenForceClose(IScreenItem screen)
         {
             if (screen.HasLogEvent)
             {
@@ -89,16 +91,9 @@ namespace Managements.Core.UI
         private IEnumerator DisableLastToast(float showTimeLength)
         {
             yield return new WaitForSeconds(showTimeLength);
-            _lastToastObject.Activation =false;
+            _lastToastObject.Activation = false;
         }
 
-        public void SetUIUpdate(Action uiUpdate)
-        {
-            if (uiUpdate != null)
-            {
-                _uiSystemUpdate = uiUpdate;
-            }
-        }
 
         public void OnToastRises(float showTimeLength, IToastItem toast)
         {
@@ -111,12 +106,7 @@ namespace Managements.Core.UI
 
         public void OnCanvasCameraChange(Camera newCamera)
         {
-            
-        }
 
-        private void ManagerUpdate()
-        {
-            _uiSystemUpdate?.Invoke();
         }
     }
 }

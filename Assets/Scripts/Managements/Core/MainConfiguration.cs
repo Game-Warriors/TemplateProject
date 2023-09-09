@@ -46,8 +46,8 @@ namespace Managements.Core
 
         byte[] IStorageConfig.IV => _iv;
 
-        string IStorageConfig.DirectoryPrefix => "0";
-        int IStorageConfig.SaveingInterval => 15;
+        string IStorageConfig.PersistStorageName => "0";
+        int IStorageConfig.SavingInterval => 15;
 
         [Preserve]
         private MainManager Manager { get; set; }
